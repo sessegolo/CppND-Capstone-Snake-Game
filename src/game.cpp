@@ -19,7 +19,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-  while (running) {
+  while (running && snake.isAlive()) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
@@ -48,6 +48,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
+  // show game over?
+  renderer.gameOver();
+  SDL_Delay(2000);
 }
 
 void Game::PlaceFood() {
@@ -76,10 +79,10 @@ void Game::Update() {
   // Check if there's food over here
   if (food.x == new_x && food.y == new_y) {
     score++;
-    PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.updateSpeed(0.02);
+    PlaceFood();
   }
 }
 
