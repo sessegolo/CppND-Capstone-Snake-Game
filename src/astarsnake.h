@@ -48,7 +48,7 @@ private:
   void UpdateHead();
   float heuristic(const SDL_Point& start, const SDL_Point& end);
   void expandNeighbors(Node& node);
-  bool isValidPos(const int x, const int y);
+  bool isValidPos(int& x, int& y);
   int _gridWidth;
   int _gridHeight;
   std::vector<Node> _openList;

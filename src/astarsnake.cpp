@@ -44,7 +44,10 @@ float AStarSnake::heuristic(const SDL_Point& start, const SDL_Point& end) {
   return abs(end.x - start.x) + abs(end.y - start.y);
 }
 
-bool AStarSnake::isValidPos(const int x, const int y) {
+bool AStarSnake::isValidPos(int& x, int& y) {
+  // if X and/or Y > _gridWidth or gridHeight, turn them to 0
+  x = x >= _gridWidth ? 0 : x;
+  y = y >= _gridHeight ? 0 : y;
   bool validX = (x >= 0 && x < _gridWidth);
   bool validY = (y >= 0 && y < _gridHeight);
 
@@ -52,9 +55,11 @@ bool AStarSnake::isValidPos(const int x, const int y) {
 }
 
 void AStarSnake::expandNeighbors(Node& node) {
+  const int nodeX = node.pos.x;
+  const int nodeY = node.pos.y;
   for(int i = 0; i < 4; ++i) {
-    int x = node.pos.x + _directionDelta[i][0];
-    int y = node.pos.y + _directionDelta[i][1];
+    int x = nodeX + _directionDelta[i][0];
+    int y = nodeY + _directionDelta[i][1];
 
     if(isValidPos(x, y)) {
       Node& nextNode = _grid[x][y];
@@ -64,7 +69,7 @@ void AStarSnake::expandNeighbors(Node& node) {
       nextNode.pos = {x, y};
       nextNode.gVal = node.gVal + 1;
       nextNode.hVal = heuristic(nextNode.pos, _goal);
-      nextNode.parent = &_grid[node.pos.x][node.pos.y];
+      nextNode.parent = &_grid[nodeX][nodeY];
       nextNode.visited = true;
       if(nextNode.state != State::Start && nextNode.state != State::Goal) {
         nextNode.state = State::Close;
