@@ -20,7 +20,7 @@ class Snake {
         _growing{false},
         _body{} {}
 
-  void Update();
+  virtual void Update();
 
   void GrowBody();
   bool isSnakeCell(int x, int y);
@@ -43,14 +43,15 @@ class Snake {
   
   const std::vector<SDL_Point>& body() const;
 
- private:
-  void UpdateHead();
-  void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
-
-  int _grid_width;
-  int _grid_height;
+protected:
   float _head_x;
   float _head_y;
+  void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
+
+ private:
+  virtual void UpdateHead();
+  int _grid_width;
+  int _grid_height;
   Direction _direction;
   float _speed;
   int _size;
