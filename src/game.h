@@ -19,16 +19,16 @@ class Game {
   int GetSize() const;
 
  private:
-  Snake snake;
+  Snake _snake;
   AStarSnake _aStarSnake;
-  SDL_Point food;
+  SDL_Point _food;
 
-  std::random_device dev;
-  std::mt19937 engine;
-  std::uniform_int_distribution<int> random_w;
-  std::uniform_int_distribution<int> random_h;
+  std::random_device _dev;
+  std::mt19937 _engine;
+  std::uniform_int_distribution<int> _random_w;
+  std::uniform_int_distribution<int> _random_h;
 
-  int score{0};
+  int _score{0};
 
   void PlaceFood();
   void PlaceFoodAStar();

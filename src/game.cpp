@@ -3,11 +3,11 @@
 #include "SDL.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
+    : _snake(grid_width, grid_height),
       _aStarSnake(grid_width, grid_height),
-      engine(dev()),
-      random_w(0, static_cast<int>(grid_width-1)),
-      random_h(0, static_cast<int>(grid_height-1)) {
+      _engine(_dev()),
+      _random_w(0, static_cast<int>(grid_width-1)),
+      _random_h(0, static_cast<int>(grid_height-1)) {
   //PlaceFood();
   PlaceFoodAStar();
 }
@@ -21,13 +21,13 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-  while (running && snake.isAlive()) {
+  while (running && _snake.isAlive()) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
+    controller.HandleInput(running, _snake);
     Update();
-    renderer.Render(snake, food);
+    renderer.Render(_snake, _food);
 
     frame_end = SDL_GetTicks();
 
@@ -38,7 +38,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(_score, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -73,7 +73,7 @@ void Game::RunAStar(Controller const &controller, Renderer &renderer,
     // so pressing ESC will kill the game
     controller.HandleKillSwitch(running);
     Update();
-    renderer.Render(_aStarSnake, food);
+    renderer.Render(_aStarSnake, _food);
 
     frame_end = SDL_GetTicks();
 
@@ -84,7 +84,7 @@ void Game::RunAStar(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(_score, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -104,14 +104,14 @@ void Game::RunAStar(Controller const &controller, Renderer &renderer,
 void Game::PlaceFoodAStar() {
   int x, y;
   while (true) {
-    x = random_w(engine);
-    y = random_h(engine);
+    x = _random_w(_engine);
+    y = _random_h(_engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!_aStarSnake.isSnakeCell(x, y)) {
-      food.x = x;
-      food.y = y;
-      _aStarSnake.updateGoal(food);
+      _food.x = x;
+      _food.y = y;
+      _aStarSnake.updateGoal(_food);
       return;
     }
   }
@@ -120,13 +120,13 @@ void Game::PlaceFoodAStar() {
 void Game::PlaceFood() {
   int x, y;
   while (true) {
-    x = random_w(engine);
-    y = random_h(engine);
+    x = _random_w(_engine);
+    y = _random_h(_engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.isSnakeCell(x, y)) {
-      food.x = x;
-      food.y = y;
+    if (!_snake.isSnakeCell(x, y)) {
+      _food.x = x;
+      _food.y = y;
       return;
     }
   }
@@ -139,8 +139,8 @@ void Game::Update() {
   int new_y = static_cast<int>(_aStarSnake.headY());
 
   // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
-    score++;
+  if (_food.x == new_x && _food.y == new_y) {
+    _score++;
     // Grow snake and increase speed.
     _aStarSnake.GrowBody();
     _aStarSnake.updateSpeed(0.02);
@@ -149,5 +149,5 @@ void Game::Update() {
   }
 }
 
-int Game::GetScore() const { return score; }
+int Game::GetScore() const { return _score; }
 int Game::GetSize() const { return _aStarSnake.size(); }
