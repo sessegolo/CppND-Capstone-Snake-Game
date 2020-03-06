@@ -57,6 +57,7 @@ bool AStarSnake::isValidPos(int& x, int& y) {
 void AStarSnake::expandNeighbors(Node& node) {
   const int nodeX = node.pos.x;
   const int nodeY = node.pos.y;
+  const float gVal = node.gVal;
   for(int i = 0; i < 4; ++i) {
     int x = nodeX + _directionDelta[i][0];
     int y = nodeY + _directionDelta[i][1];
@@ -67,7 +68,7 @@ void AStarSnake::expandNeighbors(Node& node) {
         continue;
       }
       nextNode.pos = {x, y};
-      nextNode.gVal = node.gVal + 1;
+      nextNode.gVal = gVal + 1;
       nextNode.hVal = heuristic(nextNode.pos, _goal);
       nextNode.parent = &_grid[nodeX][nodeY];
       nextNode.visited = true;
@@ -123,5 +124,6 @@ const std::vector<SDL_Point>& AStarSnake::search() {
 
     expandNeighbors(current);
   }
+  // When the snake traps itself, the A* algorithm will return an empty path here
   return _path;
 }
