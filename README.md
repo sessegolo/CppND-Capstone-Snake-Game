@@ -29,3 +29,10 @@ The goal of this project is to implement an A* Snake. The Snake should follow th
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./SnakeGame`.
+
+## Note on running the game
+
+After running the game, the Snake will start following the food automatically.
+Eventually, the snake might get stuck.
+Could be because the snake surrounded itself, or because the algorithm can't find a path, most likely because the snake is too big and blocks the food.
+Either way, you can kill the game by pressing **ESC** at any time.
